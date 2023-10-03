@@ -200,12 +200,13 @@ ssize_t p_read(git_file fd, void *buf, size_t cnt)
 int p_write(git_file fd, const void *buf, size_t cnt)
 {
 	const char *b = buf;
-
+	unsigned int maxCnt = INT_MAX;
+	unsigned int adjCnt = min(maxCnt, (unsigned int) cnt);
 	while (cnt) {
 		ssize_t r;
 #ifdef GIT_WIN32
 		GIT_ASSERT((size_t)((unsigned int)cnt) == cnt);
-		r = write(fd, b, (unsigned int)cnt);
+		r = write(fd, b, (unsigned int)adjCnt);
 #else
 		r = write(fd, b, cnt);
 #endif
@@ -218,6 +219,7 @@ int p_write(git_file fd, const void *buf, size_t cnt)
 			errno = EPIPE;
 			return -1;
 		}
+		adjCnt = min(maxCnt, (unsigned int) cnt - adjCnt);
 		cnt -= r;
 		b += r;
 	}
