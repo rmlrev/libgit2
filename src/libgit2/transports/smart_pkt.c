@@ -464,7 +464,7 @@ static int shallow_pkt(
 	line += 8;
 	len -= 8;
 
-	if (len != oid_hexsize)
+	if (len - 1 != oid_hexsize)
 		goto out_err;
 
 	git_oid__fromstr(&pkt->oid, line, data->oid_type);
