@@ -37,6 +37,7 @@ const cli_cmd_spec cli_cmds[] = {
 	{ "config",      cmd_config,      "View or set configuration values " },
 	{ "hash-object", cmd_hash_object, "Hash a raw object and product its object ID" },
 	{ "help",        cmd_help,        "Display help information" },
+	{ "index-pack",  cmd_index_pack,  "Create an index for a packfile" },
 	{ NULL }
 };
 
@@ -97,6 +98,11 @@ int main(int argc, char **argv)
 
 	if (show_version) {
 		printf("%s version %s\n", PROGRAM_NAME, LIBGIT2_VERSION);
+		goto done;
+	}
+
+	if (!command) {
+		ret = cmd_help(argc, argv);
 		goto done;
 	}
 
